@@ -9,6 +9,7 @@ set(CMAKE_DISABLE_SOURCE_CHANGES  ON)
 include(CTest)
 
 option(BUILD_EXAMPLES "Build Examples" ON)
+option(BUILD_TESTING "Build Tests" OFF)
 
 # Find the QtWidgets library
 find_package(Qt5 COMPONENTS
@@ -50,7 +51,7 @@ set(CPP_SOURCE_FILES
 # If we want to give the option to build a static library,
 # leave off SHARED here and use BUILD_SHARED_LIBS to
 # choose whether to add -D NODE_EDITOR_SHARED
-add_library(nodes SHARED
+add_library(nodes STATIC
   ${CPP_SOURCE_FILES}
   ${RESOURCES}
 )
@@ -127,9 +128,9 @@ endif()
 # Automated Tests
 ##
 
-if(BUILD_TESTING)
-  add_subdirectory(test)
-endif()
+# if(BUILD_TESTING)
+#   add_subdirectory(test)
+# endif()
 
 ###############
 # Installation
