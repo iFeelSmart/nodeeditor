@@ -57,6 +57,9 @@ public:
   virtual QString
   name() const = 0;
 
+  /// Get Node Data
+  virtual std::shared_ptr<NodeData> getNodeData() { return nullptr; }
+
 public:
 
   QJsonObject

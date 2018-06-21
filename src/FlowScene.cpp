@@ -223,17 +223,21 @@ removeNode(Node& node)
   // call signal
   nodeDeleted(node);
 
-  for(auto portType: {PortType::In,PortType::Out})
-  {
-    auto nodeState = node.nodeState();
-    auto const & nodeEntries = nodeState.getEntries(portType);
-
-    for (auto &connections : nodeEntries)
+  auto deleteConnections =
+    [&node, this] (PortType portType)
     {
-      for (auto const &pair : connections)
-        deleteConnection(*pair.second);
-    }
-  }
+      auto nodeState = node.nodeState();
+      auto const & nodeEntries = nodeState.getEntries(portType);
+
+      for (auto &connections : nodeEntries)
+      {
+        for (auto const &pair : connections)
+          deleteConnection(*pair.second);
+      }
+    };
+
+  deleteConnections(PortType::In);
+  deleteConnections(PortType::Out);
 
   _nodes.erase(node.id());
 }
@@ -438,7 +442,7 @@ clearScene()
 }
 
 
-void
+const QString
 FlowScene::
 save() const
 {
@@ -459,6 +463,8 @@ save() const
       file.write(saveToMemory());
     }
   }
+
+  return fileName;
 }
 
 
@@ -489,6 +495,23 @@ load()
   loadFromMemory(wholeFile);
 }
 
+void FlowScene::loadFile( const QString& strFilePath, bool bClearScene )
+{
+    if( bClearScene )
+        clearScene();
+
+    if (!QFileInfo::exists(strFilePath))
+      return;
+
+    QFile file(strFilePath);
+
+    if (!file.open(QIODevice::ReadOnly))
+      return;
+
+    QByteArray wholeFile = file.readAll();
+
+    loadFromMemory(wholeFile);
+}
 
 QByteArray
 FlowScene::

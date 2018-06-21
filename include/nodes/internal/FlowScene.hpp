@@ -89,9 +89,11 @@ public:
 
   void clearScene();
 
-  void save() const;
+  const QString save() const;
 
   void load();
+
+  void loadFile( const QString& strFilePath, bool bClearScene = true );
 
   QByteArray saveToMemory() const;
 
